@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hardware Detection Technical Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav id="navbar">
+      <header>Hardware Detection: Technical Documentation</header>
+      <ul>
+        <li><a class="nav-link"  href="#Descripcion">Descripcion</a></li>
+        <li>
+          <a class="nav-link" href="#Uso"
+            >Uso</a
+          >
+        </li>
+        <li>
+          <a class="nav-link" href="#Detalles_del_script"
+            >Detalles del script</a
+          >
+        </li>
+        <li><a class="nav-link" href="#Creacion_del_JSON">Creacion del JSON</a></li>
+        <li><a class="nav-link" href="#Requisitos">Requisitos</a></li>
+        <li>
+          <a class="nav-link" href="#Notas_adicionales"
+            >Notas adicionales</a
+          >
+        </li>
+        <li><a class="nav-link" href="#Notas_sobre_el_Estado_de_Desarrollo_y_la_Licencia_MIT">Notas sobre el Estado de Desarrollo y la Licencia MIT</a></li>
+        
+      </ul>
+    </nav>
+    <main id="main-doc">
+      <section class="main-section" id="Descripcion">
+        <header>Descripcion</header>
+        <article>
+          <p>
+            Este documento proporciona una descripción técnica detallada 
+                del script de Windows Batch utilizado para recopilar información 
+                del hardware de un sistema. El script se encarga de obtener datos 
+                sobre la memoria RAM, el procesador, los discos duros, la tarjeta de video, 
+                el adaptador Wi-Fi y la tarjeta Bluetooth (si está presente) en el sistema. 
+                Además, crea un archivo JSON que almacena esta información.
+          </p>
+        </article>
+      </section>
+      <section class="main-section" id="Uso">
+        <header>Uso</header>
+        <article>
+            <p>El script se ejecuta desde un entorno de línea de comandos de Windows.
+                Para ejecutarlo, simplemente descargue el sigueinte archivo:</p>
+
+                 <code>detect.bat</code>
+            <p>Utiliza el comando cd (Change Directory) para navegar a la ubicación donde 
+              guardó el archivo .bat. Por ejemplo, si lo guardaste en el escritorio, 
+              puede usar el siguiente comando:</p>
+                 <code>cd %userprofile%\Desktop</code>
+            <p>
+              Una vez que estés en la ubicación correcta, 
+              simplemente escribe el nombre del archivo .bat y 
+              presione "Enter" para ejecutarlo. Por ejemplo:
+            </p>
+                 <code>detect.bat</code>
+            <p>
+              El script comenzará a ejecutarse y recopilará la información del hardware 
+              y el sistema operativo de tu computadora. Espera a que el script termine de 
+              ejecutarse. Esto puede llevar unos momentos, dependiendo de la velocidad de 
+              tu computadora y la cantidad de hardware que deba analizar.
+            </p>
+
+            <p>
+              Una vez que el script haya terminado de ejecutarse, deberías ver un archivo 
+              llamado "hardware.json" en la misma ubicación donde guardaste el archivo ".bat". 
+              Puedes abrir este archivo con un editor de texto o visualizador JSON para ver la 
+              información recopilada, a continuacion se presenta un ejemplo del JSON obtenido:
+            </p>
+                 <code>{"version_SO":"10.0.19045.3393","wi_fi_nombre":"Hyper-V Virtual Ethernet Adapter #2","wi_fi_fabricante":"Microsoft","bluetooth_nombre":"0","bluetooth_fabricante":"0","video_nombre":"NVIDIA GeForce 9400 GT ","video_memoria":"1073741824 bytes","video_procesador":"GeForce 9400 GT","disco1_marca":"WDC WD10 EZEX-60WN4A0 SATA Disk Device","disco1_tamaño":"1000202273280","disco2_marca":"KINGSTON  SA400S37480G SATA Disk Device","disco2_tamaño":"480101368320","procesador_fabricante":"AuthenticAMD","procesador_modelo":"AMD Athlon(tm) 5150 APU with Radeon(tm) R3     ","procesador_núcleos":"4","procesador_velocidad":"1600 MHz","memoria_ram": [{"capacidad":"8589934592  bytes","factor_forma":"8","tipo_memoria":"24","velocidad":"1600"},{"capacidad":"  bytes","factor_forma":"","tipo_memoria":"","velocidad":""},{"capacidad":" bytes","factor_forma":"","tipo_memoria":"","velocidad":""}]} 
+                </code>
+            <p>
+              Utilice el comando move para mover el archivo .json a la carpeta de destino. 
+              Debes proporcionar la ubicación completa de la carpeta de destino y el nombre 
+              del archivo. Por ejemplo, si desea mover el archivo hardware.json a una carpeta 
+              llamada Backup en el escritorio, puedes usar el siguiente comando:
+            </p>
+                 <code>move hardware.json %userprofile%\Desktop\Backup</code>
+        </article>
+      </section>
+      <section class="main-section" id="Detalles_del_script">
+        <header>Detalles del script</header>
+        <article>
+            
+                <p>
+                <h3>Memoria RAM</h3>
+                El script utiliza el comando wmic para obtener información 
+                sobre la memoria RAM del sistema, incluyendo la capacidad,
+                 el factor de forma, el tipo de memoria y la velocidad. 
+                 La información se almacena en matrices para su posterior procesamiento 
+                 y se excluye la primera fila que contiene encabezados.
+                </p>
+    
+              <p>
+                <h3>Procesador</h3>
+                La información del procesador se obtiene también utilizando el
+                 comando wmic. Se recopila el nombre del procesador, 
+                 el número de núcleos y la velocidad máxima. 
+                 Estos datos se almacenan en variables.
+              </p>
+              
+              <p>
+                <h3>Discos Duros</h3>
+                La información sobre los discos duros se obtiene utilizando wmic 
+                para obtener la marca y el tamaño de los discos. Los datos se almacenan 
+                en variables, y el script es capaz de manejar múltiples discos si están 
+                presentes.
+              </p>
+  
+              <p>
+                <h3>Tarjeta de Video</h3>
+                La información de la tarjeta de video se recopila utilizando wmic 
+                para obtener el nombre, la memoria de adaptador y el procesador de video.
+                 Estos datos se almacenan en variables.
+              </p>
+              <p>
+                <h3>Adaptador Wi-Fi</h3>
+                El script verifica la presencia de un adaptador Wi-Fi habilitado
+                 y físico en el sistema. Si se encuentra uno, se almacena el nombre
+                  y el fabricante en variables.
+              </p>
+              <p>
+                <h3>Adaptador Bluetooth</h3>
+                El script verifica si hay una tarjeta Bluetooth en el sistema. 
+                Si se encuentra una tarjeta Bluetooth, se obtiene el nombre y el fabricante 
+                y se almacenan en variables. 
+                Si no se encuentra una tarjeta Bluetooth, 
+                se establecen valores predeterminados de "0" para las variables.
+              </p>
+              <p>
+                <h3>Sistema Operativo</h3>
+                El script recopila la versión del sistema operativo de Windows.
+              </p>
+        </article>
+      </section>
+      <section class="main-section" id="Creacion_del_JSON">
+        <header>Creacion del JSON</header>
+        <article>
+            <p>
+                El script crea un objeto JSON que contiene todos los datos recopilados del
+                hardware y el sistema operativo. Los datos se
+                organizan en un formato estructurado y se
+                almacenan en un archivo llamado hardware.json en el directorio actual.
+            
+            
+            <h4>El objeto JSON tiene las siguientes propiedades:</h4>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">version_SO: Versión del sistema operativo.</li>
+                <li class="list-group-item">wi_fi_nombre: Nombre del adaptador Wi-Fi.</li>
+                <li class="list-group-item">wi_fi_fabricante: Fabricante del adaptador Wi-Fi.</li>
+                <li class="list-group-item">bluetooth_nombre: Nombre de la tarjeta Bluetooth.</li>
+                <li class="list-group-item">bluetooth_fabricante: Fabricante de la tarjeta Bluetooth.</li>
+                <li class="list-group-item">video_nombre: Nombre de la tarjeta de video.</li>
+                <li class="list-group-item">video_memoria: Memoria de adaptador de video.</li>
+                <li class="list-group-item">video_procesador: Procesador de video.</li>
+                <li class="list-group-item">disco1_marca: Marca del primer disco duro.</li>
+                <li class="list-group-item">disco1_tamaño: Tamaño del primer disco duro.</li>
+                <li class="list-group-item">disco2_marca: Marca del segundo disco duro.</li>
+                <li class="list-group-item">disco2_tamaño: Tamaño del segundo disco duro.</li>
+                <li class="list-group-item">procesador_fabricante: Fabricante del procesador.</li>
+                <li class="list-group-item">procesador_modelo: Modelo del procesador.</li>
+                <li class="list-group-item">procesador_núcleos: Número de núcleos del procesador.</li>
+                <li class="list-group-item">procesador_velocidad: Velocidad del procesador en MHz.</li>
+                <li class="list-group-item">memoria_ram: Lista de objetos que representan la información de la memoria RAM. Cada
+                    objeto tiene las propiedades:
+                    capacidad, factor_forma, tipo_memoria y velocidad.
+                    El archivo hardware.json puede ser utilizado para realizar un seguimiento detallado de la configuración de
+                    hardware del
+                    sistema.</li>
+            </ul>
+            </p>
+        </article>
+      </section>
+      <section class="main-section" id="Requisitos">
+        <header>Requisitos</header>
+        <p>
+            El script se ejecuta en sistemas Windows que admiten el
+            comando wmic y utiliza características específicas de Windows
+            para recopilar información del hardware. Asegúrese de que el sistema
+            tenga permisos de administrador para acceder a la información del hardware.
+          </p>
+      </section>
+      <section class="main-section" id="Notas_adicionales">
+        <header>Notas adicionales</header>
+        <article>
+            <p>
+                <li>Este script proporciona información detallada sobre el hardware, 
+                 pero puede requerir modificaciones para adaptarse a configuraciones específicas.</li>
+                <li>Los datos recopilados por el script se almacenan en un archivo JSON 
+                 que se sobrescribirá cada vez que se ejecute el script. 
+                 Asegúrese de guardar o hacer copias de seguridad de los archivos si 
+                 es necesario.</li>
+                <li>Tenga en cuenta que la precisión de la información recopilada 
+                 depende de la disponibilidad y exactitud de los datos proporcionados 
+                 por el sistema operativo y los controladores de hardware.</li>
+               </p>
+        </article>
+      </section>
+      <section class="main-section" id="Notas_sobre_el_Estado_de_Desarrollo_y_la_Licencia_MIT">
+        <header>Notas sobre el Estado de Desarrollo y la Licencia MIT</header>
+        <article>
+            <p>
+                Este proyecto se encuentra en desarrollo y puede estar sujeto a cambios 
+                y mejoras futuras. Se distribuye bajo la Licencia MIT, lo que significa 
+                que tiene la libertad de utilizar, modificar y distribuir el código según 
+                los términos de dicha licencia. 
+                Para obtener la última versión del código y colaborar en el desarrollo, 
+                visite <a
+                    href="https://github.com/LucasAMoralesRomero/hardware-detection"
+                    target="_blank"
+                    >el repositorio en GitHub</a>
+              </p>
+              <h3>Licencia MIT</h3>
+              <p>
+                Este proyecto se encuentra bajo la
+                <a
+                    href="https://github.com/LucasAMoralesRomero/hardware-detection/blob/main/LICENSE"
+                    target="_blank"
+                    >Licencia MIT</a>
+                , que es una licencia de código abierto ampliamente reconocida 
+                que permite el uso, la modificación y la distribución del código. 
+                Asegúrese de revisar los términos completos de la licencia antes 
+                de utilizar este código en su proyecto.
+              </p>
+        </article>
+      </section>
+      
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+  </body>
+</html>
